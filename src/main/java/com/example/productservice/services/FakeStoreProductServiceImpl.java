@@ -47,7 +47,7 @@ public class FakeStoreProductServiceImpl implements IProductService {
     public Product getSingleProduct(Long productId) {
         // Suppose if Id is not present. exa:- 10021
         Optional<FakeStoreCreateProductResponsedto> optionalProductData = Optional.ofNullable(restTemplate.getForObject("https://fakestoreapi.com/products/" + productId, FakeStoreCreateProductResponsedto.class));
-        // if not present, return null
+        // if not present, return null. Later I will add exception.
         if(optionalProductData.isEmpty()) {return null;}
         // else return corresponding product
         Product returnedProduct = new Product();
