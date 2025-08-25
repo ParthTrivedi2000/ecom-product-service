@@ -5,6 +5,9 @@ import com.example.productservice.dtos.FakeStoreCreateProductResponsedto;
 import com.example.productservice.models.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service("fakeStoreProductServiceImpl")
@@ -58,5 +61,22 @@ public class FakeStoreProductServiceImpl implements IProductService {
         returnedProduct.setProductName(optionalProductData.get().getTitle());
         returnedProduct.setId(optionalProductData.get().getId());
         return returnedProduct;
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        FakeStoreCreateProductResponsedto[] responseList = restTemplate.getForObject("https://fakestoreapi.com/products", FakeStoreCreateProductResponsedto[].class);
+        List<Product> productsList = new ArrayList<>();
+        for(FakeStoreCreateProductResponsedto response: responseList) {
+            Product product = new Product();
+            product.setProductCategory(response.getCategory());
+            product.setProductImage(response.getImage());
+            product.setProductPrice(response.getPrice());
+            product.setProductDescription(response.getDescription());
+            product.setProductName(response.getTitle());
+            product.setId(response.getId());
+            productsList.add(product);
+        }
+        return productsList;
     }
 }

@@ -6,6 +6,7 @@ import com.example.productservice.models.Product;
 import com.example.productservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -19,8 +20,10 @@ public class ProductController {
     }
 
 
-    @GetMapping("/")
-    public void getAllProducts() {}
+    @GetMapping("")
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
+    }
 
     @GetMapping("/{productId}")
     public Product getSingleProduct(@PathVariable("productId") Long id) {
