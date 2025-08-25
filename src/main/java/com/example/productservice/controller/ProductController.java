@@ -23,7 +23,9 @@ public class ProductController {
     public void getAllProducts() {}
 
     @GetMapping("/{productId}")
-    public void getSingleProduct(@PathVariable("productId") Long id) {}
+    public Product getSingleProduct(@PathVariable("productId") Long id) {
+        return productService.getSingleProduct(id);
+    }
 
 
     @PostMapping("")

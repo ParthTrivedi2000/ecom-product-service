@@ -5,6 +5,7 @@ import com.example.productservice.dtos.FakeStoreCreateProductResponsedto;
 import com.example.productservice.models.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import java.util.Optional;
 
 @Service("fakeStoreProductServiceImpl")
 public class FakeStoreProductServiceImpl implements IProductService {
@@ -39,6 +40,23 @@ public class FakeStoreProductServiceImpl implements IProductService {
         returnedProduct.setProductName(response.getTitle());
         returnedProduct.setId(response.getId());
 
+        return returnedProduct;
+    }
+
+    @Override
+    public Product getSingleProduct(Long productId) {
+        // Suppose if Id is not present. exa:- 10021
+        Optional<FakeStoreCreateProductResponsedto> optionalProductData = Optional.ofNullable(restTemplate.getForObject("https://fakestoreapi.com/products/" + productId, FakeStoreCreateProductResponsedto.class));
+        // if not present, return null
+        if(optionalProductData.isEmpty()) {return null;}
+        // else return corresponding product
+        Product returnedProduct = new Product();
+        returnedProduct.setProductCategory(optionalProductData.get().getCategory());
+        returnedProduct.setProductImage(optionalProductData.get().getImage());
+        returnedProduct.setProductPrice(optionalProductData.get().getPrice());
+        returnedProduct.setProductDescription(optionalProductData.get().getDescription());
+        returnedProduct.setProductName(optionalProductData.get().getTitle());
+        returnedProduct.setId(optionalProductData.get().getId());
         return returnedProduct;
     }
 }

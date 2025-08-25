@@ -11,4 +11,9 @@ public class DbProductServiceImpl implements IProductService {
         return null;
     }
 
+    @Override
+    public Product getSingleProduct(Long productId) {
+        return null;
+    }
+
 }
