@@ -1,8 +1,11 @@
 package com.example.productservice.services;
 
-import com.example.productservice.dtos.FakeStoreCreateProductRequestdto;
-import com.example.productservice.dtos.FakeStoreCreateProductResponsedto;
+import com.example.productservice.dtos.FakeStoreCreateProductRequestDto;
+import com.example.productservice.dtos.FakeStoreCreateProductResponseDto;
 import com.example.productservice.models.Product;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,7 +26,7 @@ public class FakeStoreProductServiceImpl implements IProductService {
     public Product createProduct(Product product) {
 
         // 1) Creating request to be sent to 3rd party API (here FakeStoreApi)
-        FakeStoreCreateProductRequestdto request = new FakeStoreCreateProductRequestdto();
+        FakeStoreCreateProductRequestDto request = new FakeStoreCreateProductRequestDto();
         request.setCategory(product.getProductCategory());
         request.setImage(product.getProductImage());
         request.setPrice(product.getProductPrice());
@@ -31,8 +34,8 @@ public class FakeStoreProductServiceImpl implements IProductService {
         request.setTitle(product.getProductName());
 
         // 2) Calling 3rd party API
-        FakeStoreCreateProductResponsedto response = restTemplate.postForObject("https://fakestoreapi.com/products/",
-                request, FakeStoreCreateProductResponsedto.class);
+        FakeStoreCreateProductResponseDto response = restTemplate.postForObject("https://fakestoreapi.com/products/",
+                request, FakeStoreCreateProductResponseDto.class);
 
         // 3) Converting 3rd party API response to the desired service response
         Product returnedProduct = new Product();
@@ -49,7 +52,7 @@ public class FakeStoreProductServiceImpl implements IProductService {
     @Override
     public Product getSingleProduct(Long productId) {
         // Suppose if Id is not present. exa:- 10021
-        Optional<FakeStoreCreateProductResponsedto> optionalProductData = Optional.ofNullable(restTemplate.getForObject("https://fakestoreapi.com/products/" + productId, FakeStoreCreateProductResponsedto.class));
+        Optional<FakeStoreCreateProductResponseDto> optionalProductData = Optional.ofNullable(restTemplate.getForObject("https://fakestoreapi.com/products/" + productId, FakeStoreCreateProductResponseDto.class));
         // if not present, return null. Later I will add exception.
         if(optionalProductData.isEmpty()) {return null;}
         // else return corresponding product
@@ -65,9 +68,9 @@ public class FakeStoreProductServiceImpl implements IProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        FakeStoreCreateProductResponsedto[] responseList = restTemplate.getForObject("https://fakestoreapi.com/products", FakeStoreCreateProductResponsedto[].class);
+        FakeStoreCreateProductResponseDto[] responseList = restTemplate.getForObject("https://fakestoreapi.com/products", FakeStoreCreateProductResponseDto[].class);
         List<Product> productsList = new ArrayList<>();
-        for(FakeStoreCreateProductResponsedto response: responseList) {
+        for(FakeStoreCreateProductResponseDto response: responseList) {
             Product product = new Product();
             product.setProductCategory(response.getCategory());
             product.setProductImage(response.getImage());
@@ -78,5 +81,27 @@ public class FakeStoreProductServiceImpl implements IProductService {
             productsList.add(product);
         }
         return productsList;
+    }
+
+    @Override
+    public Product replaceProduct(Long productId, Product product) {
+
+        FakeStoreCreateProductRequestDto request = new FakeStoreCreateProductRequestDto();
+        request.setCategory(product.getProductCategory());
+        request.setImage(product.getProductImage());
+        request.setPrice(product.getProductPrice());
+        request.setDescription(product.getProductDescription());
+        request.setTitle(product.getProductName());
+
+        ResponseEntity<FakeStoreCreateProductResponseDto> response = restTemplate.exchange("https://fakestoreapi.com/products/"+productId, HttpMethod.PUT, new HttpEntity<>(request), FakeStoreCreateProductResponseDto.class);
+
+        Product returnedProduct = new Product();
+        returnedProduct.setProductCategory(response.getBody().getCategory());
+        returnedProduct.setProductImage(response.getBody().getImage());
+        returnedProduct.setProductPrice(response.getBody().getPrice());
+        returnedProduct.setProductDescription(response.getBody().getDescription());
+        returnedProduct.setProductName(response.getBody().getTitle());
+        returnedProduct.setId(response.getBody().getId());
+        return returnedProduct;
     }
 }

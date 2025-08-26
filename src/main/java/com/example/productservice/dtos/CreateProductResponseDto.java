@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateProductResponsedto {
+public class CreateProductResponseDto {
 
     private Long Id;
     private String Name;
@@ -15,8 +15,8 @@ public class CreateProductResponsedto {
     private String category;
     private String image;
 
-    public static CreateProductResponsedto fromProduct(Product product) {
-        CreateProductResponsedto dto = new CreateProductResponsedto();
+    public static CreateProductResponseDto fromProduct(Product product) {
+        CreateProductResponseDto dto = new CreateProductResponseDto();
         dto.Id = product.getId();
         dto.Name = product.getProductName();
         dto.Description = product.getProductDescription();

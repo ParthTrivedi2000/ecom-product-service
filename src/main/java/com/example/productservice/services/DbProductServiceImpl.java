@@ -23,4 +23,9 @@ public class DbProductServiceImpl implements IProductService {
         return List.of();
     }
 
+    @Override
+    public Product replaceProduct(Long productId, Product product) {
+        return null;
+    }
+
 }
