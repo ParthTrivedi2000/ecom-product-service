@@ -33,4 +33,9 @@ public class DbProductServiceImpl implements IProductService {
         return null;
     }
 
+    @Override
+    public void deleteProduct(Long productId) {
+
+    }
+
 }

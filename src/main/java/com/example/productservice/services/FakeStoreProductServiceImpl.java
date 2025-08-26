@@ -126,4 +126,10 @@ public class FakeStoreProductServiceImpl implements IProductService {
         returnedProduct.setId(response.getBody().getId());
         return returnedProduct;
     }
+
+    @Override
+    public void deleteProduct(Long productId) {
+        restTemplate.delete("https://fakestoreapi.com/products/"+productId);
+        return;
+    }
 }
