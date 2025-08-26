@@ -104,4 +104,26 @@ public class FakeStoreProductServiceImpl implements IProductService {
         returnedProduct.setId(response.getBody().getId());
         return returnedProduct;
     }
+
+    @Override
+    public Product updateProduct(Long productId, Product product) {
+        FakeStoreCreateProductRequestDto request = new FakeStoreCreateProductRequestDto();
+        request.setCategory(product.getProductCategory());
+        request.setImage(product.getProductImage());
+        request.setPrice(product.getProductPrice());
+        request.setDescription(product.getProductDescription());
+        request.setTitle(product.getProductName());
+
+        // PATCH method type is not supported by FakeStoreAPI, so keeping method type as PUT only.
+        ResponseEntity<FakeStoreCreateProductResponseDto> response = restTemplate.exchange("https://fakestoreapi.com/products/"+productId, HttpMethod.PUT, new HttpEntity<>(request), FakeStoreCreateProductResponseDto.class);
+
+        Product returnedProduct = new Product();
+        returnedProduct.setProductCategory(response.getBody().getCategory());
+        returnedProduct.setProductImage(response.getBody().getImage());
+        returnedProduct.setProductPrice(response.getBody().getPrice());
+        returnedProduct.setProductDescription(response.getBody().getDescription());
+        returnedProduct.setProductName(response.getBody().getTitle());
+        returnedProduct.setId(response.getBody().getId());
+        return returnedProduct;
+    }
 }

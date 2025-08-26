@@ -10,4 +10,5 @@ public interface IProductService {
     Product getSingleProduct(Long productId);
     List<Product> getAllProducts();
     Product replaceProduct(Long productId, Product product);
+    Product updateProduct(Long productId, Product product);
 }

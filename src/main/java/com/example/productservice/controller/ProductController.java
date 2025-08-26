@@ -1,9 +1,6 @@
 package com.example.productservice.controller;
 
-import com.example.productservice.dtos.CreateProductRequestDto;
-import com.example.productservice.dtos.CreateProductResponseDto;
-import com.example.productservice.dtos.ProductResponseDto;
-import com.example.productservice.dtos.ReplaceProductRequestDto;
+import com.example.productservice.dtos.*;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,7 +53,11 @@ public class ProductController {
         return ProductResponseDto.fromEntity(product);
     }
 
-    public void updateProduct(){}
+    @PatchMapping("/{productId}")
+    public ProductResponseDto updateProduct(@PathVariable("productId") Long id, @RequestBody UpdateProductRequestDto request){
+        Product response = productService.updateProduct(id, request.toProduct());
+        return ProductResponseDto.fromEntity(response);
+    }
 
     @DeleteMapping("/{id}")
     public void deleteProduct() {}
