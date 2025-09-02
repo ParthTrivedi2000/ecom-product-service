@@ -14,7 +14,7 @@ public class ProductController {
     private final IProductService productService;
 
     // Constructor Injection
-    public ProductController(@Qualifier("fakeStoreProductServiceImpl") IProductService productService) {
+    public ProductController(@Qualifier("dbProductServiceImpl") IProductService productService) {
         this.productService = productService;
     }
 
