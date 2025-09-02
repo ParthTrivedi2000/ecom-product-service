@@ -50,7 +50,28 @@ public class DbProductServiceImpl implements IProductService {
 
     @Override
     public Product replaceProduct(Long productId, Product product) {
-        return null;
+        // Logic :-
+        /*
+        We have to check weather the id exists or not. If not then we can throw the exception. If yes then save
+        the product. But yes again here you need to check for the category separately.
+         */
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if(optionalProduct.isEmpty()){
+            throw new RuntimeException("Product not found");
+        }
+
+        Product returnedProduct = optionalProduct.get();
+
+        // Checking if category is available or not
+        Category categoryForProduct = getCategoryForProduct(product);
+        returnedProduct.setProductCategory(categoryForProduct);
+
+        returnedProduct.setProductName(product.getProductName());
+        returnedProduct.setProductDescription(product.getProductDescription());
+        returnedProduct.setProductPrice(product.getProductPrice());
+        returnedProduct.setProductImage(product.getProductImage());
+
+        return productRepository.save(returnedProduct);
     }
 
     @Override
