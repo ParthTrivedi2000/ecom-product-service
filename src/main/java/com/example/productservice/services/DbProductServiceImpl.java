@@ -54,7 +54,8 @@ public class DbProductServiceImpl implements IProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        return List.of();
+        List<Product> returnedListOfProducts = productRepository.findAll();
+        return returnedListOfProducts;
     }
 
     @Override

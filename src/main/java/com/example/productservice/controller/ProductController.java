@@ -5,6 +5,8 @@ import com.example.productservice.models.Product;
 import com.example.productservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,8 +22,15 @@ public class ProductController {
 
 
     @GetMapping("")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public List<ProductResponseDto> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+
+        List<ProductResponseDto> listOfProducts = new ArrayList<>();
+        for (Product product : products) {
+            listOfProducts.add(ProductResponseDto.fromEntity(product));
+        }
+
+        return listOfProducts;
     }
 
     @GetMapping("/{productId}")
