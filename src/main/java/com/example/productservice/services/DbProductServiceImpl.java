@@ -28,18 +28,7 @@ public class DbProductServiceImpl implements IProductService {
         for any new product:- 1st check if category exists or not? --> if yes just create product in db and return resp
         else if not, then 1st create the category in the category table then create the product in the db.
          */
-        String category = product.getProductCategory().getCategoryName();
-        Optional<Category> categoryOptional = categoryRepository.findByCategoryName(category);
-        Category categoryForProduct = null;
-        if(categoryOptional.isEmpty()) {
-            // Creating Category Object
-            Category newCategory = new Category();
-            newCategory.setCategoryName(category);
-            newCategory.setCategoryDescription(product.getProductCategory().getCategoryDescription());
-            categoryForProduct = categoryRepository.save(newCategory);
-        } else {
-            categoryForProduct = categoryOptional.get();
-        }
+        Category categoryForProduct = getCategoryForProduct(product);
 
         // Setting Updated Category to Product object
         product.setProductCategory(categoryForProduct);
@@ -66,7 +55,49 @@ public class DbProductServiceImpl implements IProductService {
 
     @Override
     public Product updateProduct(Long productId, Product product) {
-        return null;
+        // logic:-
+        /*
+        So if productId already exists then we need to update the product. but here please make sure to check which all
+        attributes are provided in the argument to update the product. Be extra careful to deal with category check, we
+        need to do the same as we did in the above create method for category.
+         */
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if(optionalProduct.isEmpty()){
+            throw new RuntimeException("Product not found");
+        }
+
+        Product updatedProduct = optionalProduct.get();
+
+        // Check for category
+        if(product.getProductCategory() != null) {
+            Category categoryForProduct = getCategoryForProduct(product);
+            // Setting Updated Category to Product object
+            updatedProduct.setProductCategory(categoryForProduct);
+        }
+
+        if(product.getProductName() != null) {updatedProduct.setProductName(product.getProductName());}
+        if(!product.getProductDescription().isEmpty()) {updatedProduct.setProductDescription(product.getProductDescription());}
+        if(product.getProductPrice() != null) {updatedProduct.setProductPrice(product.getProductPrice());}
+        if(product.getProductImage() != null) {updatedProduct.setProductImage(product.getProductImage());}
+
+        // Saving Updated Product to DB
+        return productRepository.save(updatedProduct);
+    }
+
+    private Category getCategoryForProduct(Product product) {
+        String category = product.getProductCategory().getCategoryName();
+        Optional<Category> categoryOptional = categoryRepository.findByCategoryName(category);
+        Category categoryForProduct = null;
+        if(categoryOptional.isEmpty()) {
+            // Creating Category Object
+            Category newCategory = new Category();
+            newCategory.setCategoryName(category);
+            newCategory.setCategoryDescription(product.getProductCategory().getCategoryDescription());
+            categoryForProduct = categoryRepository.save(newCategory);
+        } else {
+            categoryForProduct = categoryOptional.get();
+        }
+        return categoryForProduct;
     }
 
     @Override
