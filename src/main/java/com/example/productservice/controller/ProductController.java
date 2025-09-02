@@ -34,8 +34,9 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public Product getSingleProduct(@PathVariable("productId") Long id) {
-        return productService.getSingleProduct(id);
+    public ProductResponseDto getSingleProduct(@PathVariable("productId") Long id) {
+        Product returnedProduct =  productService.getSingleProduct(id);
+        return ProductResponseDto.fromEntity(returnedProduct);
     }
 
 

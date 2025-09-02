@@ -49,7 +49,8 @@ public class DbProductServiceImpl implements IProductService {
 
     @Override
     public Product getSingleProduct(Long productId) {
-        return null;
+         Optional<Product> optionalProduct = productRepository.findById(productId);
+        return optionalProduct.orElse(null);
     }
 
     @Override
