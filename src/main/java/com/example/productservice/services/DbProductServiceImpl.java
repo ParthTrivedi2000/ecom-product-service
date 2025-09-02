@@ -123,7 +123,9 @@ public class DbProductServiceImpl implements IProductService {
 
     @Override
     public void deleteProduct(Long productId) {
-
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if(optionalProduct.isEmpty()){throw new RuntimeException("Product not found");}
+        productRepository.deleteById(productId);
     }
 
 }
