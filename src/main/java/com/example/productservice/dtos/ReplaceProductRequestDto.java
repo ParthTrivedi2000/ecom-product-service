@@ -1,5 +1,6 @@
 package com.example.productservice.dtos;
 
+import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 import lombok.Getter;
 import lombok.NonNull;
@@ -24,7 +25,9 @@ public class ReplaceProductRequestDto {
         Product product = new Product();
         product.setProductName(productName);
         product.setProductDescription(productDescription);
-        product.setProductCategory(productCategory);
+        Category category = new Category();
+        category.setCategoryName(productCategory);
+        product.setProductCategory(category);
         product.setProductPrice(productPrice);
         product.setProductImage(productImage);
         return product;
