@@ -5,6 +5,8 @@ import com.example.productservice.models.Product;
 import com.example.productservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -14,19 +16,27 @@ public class ProductController {
     private final IProductService productService;
 
     // Constructor Injection
-    public ProductController(@Qualifier("fakeStoreProductServiceImpl") IProductService productService) {
+    public ProductController(@Qualifier("dbProductServiceImpl") IProductService productService) {
         this.productService = productService;
     }
 
 
     @GetMapping("")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public List<ProductResponseDto> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+
+        List<ProductResponseDto> listOfProducts = new ArrayList<>();
+        for (Product product : products) {
+            listOfProducts.add(ProductResponseDto.fromEntity(product));
+        }
+
+        return listOfProducts;
     }
 
     @GetMapping("/{productId}")
-    public Product getSingleProduct(@PathVariable("productId") Long id) {
-        return productService.getSingleProduct(id);
+    public ProductResponseDto getSingleProduct(@PathVariable("productId") Long id) {
+        Product returnedProduct =  productService.getSingleProduct(id);
+        return ProductResponseDto.fromEntity(returnedProduct);
     }
 
 

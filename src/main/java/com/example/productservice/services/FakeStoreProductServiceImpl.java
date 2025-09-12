@@ -2,6 +2,7 @@ package com.example.productservice.services;
 
 import com.example.productservice.dtos.FakeStoreCreateProductRequestDto;
 import com.example.productservice.dtos.FakeStoreCreateProductResponseDto;
+import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -27,7 +28,7 @@ public class FakeStoreProductServiceImpl implements IProductService {
 
         // 1) Creating request to be sent to 3rd party API (here FakeStoreApi)
         FakeStoreCreateProductRequestDto request = new FakeStoreCreateProductRequestDto();
-        request.setCategory(product.getProductCategory());
+        request.setCategory(product.getProductCategory().getCategoryName());
         request.setImage(product.getProductImage());
         request.setPrice(product.getProductPrice());
         request.setDescription(product.getProductDescription());
@@ -39,7 +40,9 @@ public class FakeStoreProductServiceImpl implements IProductService {
 
         // 3) Converting 3rd party API response to the desired service response
         Product returnedProduct = new Product();
-        returnedProduct.setProductCategory(response.getCategory());
+        Category category = new Category();
+        category.setCategoryName(response.getCategory());
+        returnedProduct.setProductCategory(category);
         returnedProduct.setProductImage(response.getImage());
         returnedProduct.setProductPrice(response.getPrice());
         returnedProduct.setProductDescription(response.getDescription());
@@ -57,7 +60,9 @@ public class FakeStoreProductServiceImpl implements IProductService {
         if(optionalProductData.isEmpty()) {return null;}
         // else return corresponding product
         Product returnedProduct = new Product();
-        returnedProduct.setProductCategory(optionalProductData.get().getCategory());
+        Category category = new Category();
+        category.setCategoryName(optionalProductData.get().getCategory());
+        returnedProduct.setProductCategory(category);
         returnedProduct.setProductImage(optionalProductData.get().getImage());
         returnedProduct.setProductPrice(optionalProductData.get().getPrice());
         returnedProduct.setProductDescription(optionalProductData.get().getDescription());
@@ -72,7 +77,9 @@ public class FakeStoreProductServiceImpl implements IProductService {
         List<Product> productsList = new ArrayList<>();
         for(FakeStoreCreateProductResponseDto response: responseList) {
             Product product = new Product();
-            product.setProductCategory(response.getCategory());
+            Category category = new Category();
+            category.setCategoryName(response.getCategory());
+            product.setProductCategory(category);
             product.setProductImage(response.getImage());
             product.setProductPrice(response.getPrice());
             product.setProductDescription(response.getDescription());
@@ -87,7 +94,7 @@ public class FakeStoreProductServiceImpl implements IProductService {
     public Product replaceProduct(Long productId, Product product) {
 
         FakeStoreCreateProductRequestDto request = new FakeStoreCreateProductRequestDto();
-        request.setCategory(product.getProductCategory());
+        request.setCategory(product.getProductCategory().getCategoryName());
         request.setImage(product.getProductImage());
         request.setPrice(product.getProductPrice());
         request.setDescription(product.getProductDescription());
@@ -96,7 +103,9 @@ public class FakeStoreProductServiceImpl implements IProductService {
         ResponseEntity<FakeStoreCreateProductResponseDto> response = restTemplate.exchange("https://fakestoreapi.com/products/"+productId, HttpMethod.PUT, new HttpEntity<>(request), FakeStoreCreateProductResponseDto.class);
 
         Product returnedProduct = new Product();
-        returnedProduct.setProductCategory(response.getBody().getCategory());
+        Category category = new Category();
+        category.setCategoryName(response.getBody().getCategory());
+        returnedProduct.setProductCategory(category);
         returnedProduct.setProductImage(response.getBody().getImage());
         returnedProduct.setProductPrice(response.getBody().getPrice());
         returnedProduct.setProductDescription(response.getBody().getDescription());
@@ -108,7 +117,7 @@ public class FakeStoreProductServiceImpl implements IProductService {
     @Override
     public Product updateProduct(Long productId, Product product) {
         FakeStoreCreateProductRequestDto request = new FakeStoreCreateProductRequestDto();
-        request.setCategory(product.getProductCategory());
+        request.setCategory(product.getProductCategory().getCategoryName());
         request.setImage(product.getProductImage());
         request.setPrice(product.getProductPrice());
         request.setDescription(product.getProductDescription());
@@ -118,7 +127,9 @@ public class FakeStoreProductServiceImpl implements IProductService {
         ResponseEntity<FakeStoreCreateProductResponseDto> response = restTemplate.exchange("https://fakestoreapi.com/products/"+productId, HttpMethod.PUT, new HttpEntity<>(request), FakeStoreCreateProductResponseDto.class);
 
         Product returnedProduct = new Product();
-        returnedProduct.setProductCategory(response.getBody().getCategory());
+        Category category = new Category();
+        category.setCategoryName(response.getBody().getCategory());
+        returnedProduct.setProductCategory(category);
         returnedProduct.setProductImage(response.getBody().getImage());
         returnedProduct.setProductPrice(response.getBody().getPrice());
         returnedProduct.setProductDescription(response.getBody().getDescription());

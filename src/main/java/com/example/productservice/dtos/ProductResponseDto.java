@@ -17,7 +17,7 @@ public class ProductResponseDto {
     public static ProductResponseDto fromEntity(Product product) {
         ProductResponseDto productResponseDto = new ProductResponseDto();
         productResponseDto.Id = product.getId();
-        productResponseDto.category = product.getProductCategory();
+        productResponseDto.category = product.getProductCategory().getCategoryName();
         productResponseDto.Description = product.getProductDescription();
         productResponseDto.price = product.getProductPrice();
         productResponseDto.image = product.getProductImage();
